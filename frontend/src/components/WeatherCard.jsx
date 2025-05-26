@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 
-const WeatherCard = ({ currentWeather, loading, error, currentLocation }) => {
+const WeatherCard = () => {
+  const { currentWeather, loading, error, currentLocation } = useSelector((state) => state.weather);
+
   if (loading) {
     return (
       <div className="bg-orange-300 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-3xl p-6 text-orange-800 shadow-xl flex flex-col items-center justify-center w-64 md:w-80 h-96">
@@ -29,7 +32,6 @@ const WeatherCard = ({ currentWeather, loading, error, currentLocation }) => {
   }
 
   const weatherIconUrl = `http://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`;
-  // Ensure currentWeather.date is a valid date string or Date object
   const displayDate = currentWeather.date ? format(new Date(currentWeather.date), 'dd MMM yyyy') : 'N/A';
 
   return (
@@ -44,14 +46,14 @@ const WeatherCard = ({ currentWeather, loading, error, currentLocation }) => {
       <div className="flex flex-col items-center justify-center flex-grow mt-8">
         <img src={weatherIconUrl} alt="weather icon" className="w-24 h-24 -mt-4" />
         <p className="text-7xl font-bold -mt-4">{Math.round(currentWeather.temperature)}°</p>
-        <p className="text-2xl mt-2">{currentWeather.description}</p>
+        <p className="text-2xl mt-2">{currentWeather.description.charAt(0).toUpperCase() + currentWeather.description.slice(1)}</p>
         <p className="text-lg mt-1">{currentWeather.location || currentLocation}</p>
         <p className="text-sm mt-1">{displayDate}</p>
       </div>
 
       <div className="w-full text-sm flex justify-between absolute bottom-6 px-6">
-        <span>Feels like {Math.round(currentWeather.temperature)}°</span>
-        <span>Sunset 18:20</span>
+        <span>Feels like {Math.round(currentWeather.temperature)}°</span> {/* OpenWeatherMap free tier doesn't usually provide "feels like" directly in current weather. Using temp as placeholder. */}
+        <span>Sunset 18:20</span> {/* Placeholder, needs actual sunset time from API if available or calculated */}
       </div>
     </div>
   );
